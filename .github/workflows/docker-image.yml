@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    
       - uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
@@ -22,9 +23,9 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/django-damproject:latest .
-          docker tag ${{ secrets.DOCKER_USERNAME }}/django-damproject:latest ${{ secrets.DOCKER_USERNAME }}/django-damproject:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_USERNAME }}/django-damproject:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/django-damproject:${{ github.sha }}
+          docker tag ${{ secrets.akashkrishna25 }}/django-damproject:latest ${{ secrets.akashkrishna25}/django-damproject:${{ github.sha }}
+          docker push ${{ secrets.akashkrishna25}}/django-damproject:latest
+          docker push ${{ secrets.akashkrishna25}}/django-damproject:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
@@ -33,7 +34,7 @@ jobs:
     steps:
       - name: Deploy to Production Server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.ubuntu }}@${{ secrets.192.168.1.100 }} << 'EOF'
             docker pull ${{ secrets.DOCKER_USERNAME }}/django-damproject:latest
             docker-compose -f /path/to/docker-compose.prod.yml up -d --no-deps --build web
           EOF
