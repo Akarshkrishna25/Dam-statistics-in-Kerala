@@ -4,10 +4,28 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: dam_stats_db
+          POSTGRES_USER: your_db_user
+          POSTGRES_PASSWORD: your_db_password
+        ports:
+          - 5432:5432
+        options: > 
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
     - name: Checkout code
@@ -22,11 +40,18 @@ jobs:
       run: |
         pip install -r requirements.txt
 
+    - name: Wait for PostgreSQL to be ready
+      run: |
+        until pg_isready -h 127.0.0.1 -p 5432; do
+          echo "Waiting for PostgreSQL to be ready..."
+          sleep 2
+        done
+
     - name: Set up Django environment
       env:
         DB_NAME: dam_stats_db
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_USER: your_db_user
+        DB_PASSWORD: your_db_password
         DB_HOST: 127.0.0.1
         DB_PORT: 5432
       run: |
@@ -37,4 +62,5 @@ jobs:
       run: |
         python manage.py test
 
-    # Other steps to build, deploy, etc.
+    - name: Complete job
+      run: echo "CI/CD pipeline completed successfully."
