@@ -17,12 +17,15 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_DB: dam_stats_db
-          POSTGRES_USER: your_db_user
-          POSTGRES_PASSWORD: your_db_password
+          POSTGRES_USER: ${{ secrets.DB_USER }}  # Use GitHub Secrets for sensitive data
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
         ports:
           - 5432:5432
         options: > 
-          --health-cmd="pg_isready -q -d dam_stats_db -U $${POSTGRES_USER}" --health-interval=10s --health-timeout=5s --health-retries=5
+          --health-cmd="pg_isready -q -d dam_stats_db -U $${POSTGRES_USER}" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=5
 
     steps:
     - name: Checkout code
@@ -47,8 +50,8 @@ jobs:
     - name: Set up Django environment
       env:
         DB_NAME: dam_stats_db
-        DB_USER: your_db_user
-        DB_PASSWORD: your_db_password
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_HOST: 127.0.0.1
         DB_PORT: 5432
       run: |
