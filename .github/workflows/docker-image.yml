@@ -1,4 +1,4 @@
-name: Django CI
+name: Django CI/CD
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  build_and_deploy:
 
     runs-on: ubuntu-latest
 
@@ -35,4 +35,48 @@ jobs:
       with:
         python-version: '3.10'
 
-    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Set up Django environment
+      run: |
+        python manage.py collectstatic --noinput
+        python manage.py makemigrations
+        python manage.py migrate
+      env:
+        DB_NAME: dam_stats_db
+        DB_USER: dam_user
+        DB_PASSWORD: dam_password
+        DB_HOST: localhost
+        DB_PORT: 5432
+
+    - name: Run tests
+      env:
+        DJANGO_SETTINGS_MODULE: dam_project.settings
+        DB_NAME: dam_stats_db
+        DB_USER: dam_user
+        DB_PASSWORD: dam_password
+        DB_HOST: localhost
+        DB_PORT: 5432
+      run: |
+        python manage.py test
+
+    - name: Build Docker image
+      run: |
+        docker build -t yourusername/django-web:latest .
+
+    - name: Stop any running container
+      run: |
+        docker stop django-container || true
+        docker rm django-container || true
+
+    - name: Run Docker container locally
+      run: |
+        docker run -d -p 8000:8000 --name django-container yourusername/django-web:latest
+
+    - name: Verify deployment
+      run: |
+        sleep 10  # Wait for container to start
+        curl --fail http://localhost:8000 || (echo "App did not start correctly" && exit 1)
