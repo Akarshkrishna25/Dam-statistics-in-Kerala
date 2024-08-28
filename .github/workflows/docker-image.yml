@@ -47,4 +47,5 @@ jobs:
     - name: Check PEP 8 compliance with Flake8
       run: |
         pip install flake8
-        flake8 --max-line-length=79 --ignore=E501,W503 dam_project/  # Adjust paths and options as needed
+        # Set max line length to 79 and ignore specific rules
+        flake8 --max-line-length=79 --ignore=E501 dam_project/
