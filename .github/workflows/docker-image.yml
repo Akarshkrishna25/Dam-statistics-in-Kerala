@@ -12,18 +12,6 @@ jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:latest
-        
-        ports:
-          - 5432:5432
-        options: > 
-          --health-cmd="pg_isready -q -d dam_stats_db -U $${POSTGRES_USER}" 
-          --health-interval=10s 
-          --health-timeout=5s 
-          --health-retries=5
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
@@ -37,27 +25,23 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    - name: Wait for PostgreSQL to be ready
+    - name: Run flake8
       run: |
-        until pg_isready -h 127.0.0.1 -p 5432; do
-          echo "Waiting for PostgreSQL to be ready..."
-          sleep 2
-        done
+        pip install flake8
+        flake8 your_app_directory/
 
-    - name: Set up Django environment
-      env:
-        DB_NAME: dam_stats_db
-        DB_USER: ${{ secrets.DB_USER }}
-        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        DB_HOST: 127.0.0.1
-        DB_PORT: 5432
+    - name: Run tests with coverage
       run: |
-        python manage.py migrate
-        python manage.py collectstatic --noinput
+        pip install coverage
+        coverage run -m django test
+        coverage report
 
-    - name: Run tests
+    - name: Run Bandit
       run: |
-        python manage.py test
+        pip install bandit
+        bandit -r your_app_directory/
 
-    - name: Complete job
-      run: echo "CI/CD pipeline completed successfully."
+    - name: Check for vulnerabilities
+      run: |
+        pip install safety
+        safety check -r requirements.txt
