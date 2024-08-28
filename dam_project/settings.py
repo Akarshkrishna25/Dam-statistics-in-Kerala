@@ -74,9 +74,9 @@ WSGI_APPLICATION = 'dam_project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = { 'default': {
-       'ENGINE': 'django.db.backends.postgresql',
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'dam_stats_db',
         'USER': 'your_db_user',
         'PASSWORD': 'password',
@@ -84,6 +84,7 @@ DATABASES = { 'default': {
         'PORT': '5432',       # Default PostgreSQL port
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
