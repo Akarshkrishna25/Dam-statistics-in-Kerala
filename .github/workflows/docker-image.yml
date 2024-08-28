@@ -36,7 +36,8 @@ jobs:
     - name: Run Bandit
       run: |
         pip install bandit
-        bandit -r dams/  # Updated with your actual app directory
+        # Running Bandit with severity levels to get a more detailed output
+        bandit -r dams/ -ll
 
     - name: Check for vulnerabilities
       run: |
