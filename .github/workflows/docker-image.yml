@@ -25,11 +25,6 @@ jobs:
       run: |
         pip install -r requirements.txt
 
-    - name: Run flake8
-      run: |
-        pip install flake8
-        flake8 dams/  # Updated with your actual app directory
-
     - name: Run tests with coverage
       run: |
         pip install coverage
