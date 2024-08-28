@@ -9,7 +9,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         url = "https://dams.kseb.in/?p=4703"
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
+
         soup = BeautifulSoup(response.text, 'html.parser')
 
         # Parse the data (Example, actual implementation will vary based on the structure)
