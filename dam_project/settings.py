@@ -74,13 +74,12 @@ WSGI_APPLICATION = 'dam_project.wsgi.application'
 
 # Database
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dam_stats_db',
-        'USER': 'your_db_user',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',  # Set to the PostgreSQL server address
-        'PORT': '5432',       # Default PostgreSQL port
+    'default': {'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'dam_stats_db',
+    'USER': 'your_db_user',
+    'PASSWORD': 'password',
+    'HOST': 'localhost',  # Set to the PostgreSQL server address
+    'PORT': '5432',       # Default PostgreSQL port
     }
 }
 
