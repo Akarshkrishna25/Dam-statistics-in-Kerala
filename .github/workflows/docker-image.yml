@@ -28,7 +28,7 @@ jobs:
     - name: Run flake8
       run: |
         pip install flake8
-        flake8 your_app_directory/
+        flake8 dams/  # Updated with your actual app directory
 
     - name: Run tests with coverage
       run: |
@@ -39,7 +39,7 @@ jobs:
     - name: Run Bandit
       run: |
         pip install bandit
-        bandit -r your_app_directory/
+        bandit -r dams/  # Updated with your actual app directory
 
     - name: Check for vulnerabilities
       run: |
